@@ -1,0 +1,55 @@
+N = 3
+Method 1 mean: 2.6, deviation: 2.19089
+Method 2 mean: 2, deviation: 0
+Method 3 mean: 2, deviation: 0
+
+N = 7
+Method 1 mean: 6.5, deviation: 2.93987
+Method 2 mean: 4.5, deviation: 0.597614
+Method 3 mean: 4, deviation: 0
+
+N = 15
+Method 1 mean: 18.7, deviation: 5.45344
+Method 2 mean: 10.2, deviation: 1.0198
+Method 3 mean: 8, deviation: 0
+
+N = 31
+Method 1 mean: 52.5, deviation: 13.6718
+Method 2 mean: 23.8, deviation: 1.9642
+Method 3 mean: 16, deviation: 0
+
+N = 63
+Method 1 mean: 98.2, deviation: 11.158
+Method 2 mean: 51.6, deviation: 1.2241
+Method 3 mean: 32, deviation: 0
+
+N = 127
+Method 1 mean: 262.4, deviation: 23.2566
+Method 2 mean: 113.5, deviation: 2.01275
+Method 3 mean: 64, deviation: 0
+
+N = 255
+Method 1 mean: 603.8, deviation: 33.1073
+Method 2 mean: 220.4, deviation: 2.9535
+Method 3 mean: 128, deviation: 0
+
+N = 511
+Method 1 mean: 1236.4, deviation: 23.2263
+Method 2 mean: 478.4, deviation: 2.39798
+Method 3 mean: 256, deviation: 0
+
+N = 1023
+Method 1 mean: 3151.2, deviation: 59.0645
+Method 2 mean: 987.3, deviation: 3.21715
+Method 3 mean: 512, deviation: 0
+
+N = 2047
+Method 1 mean: 6915.1, deviation: 67.7334
+Method 2 mean: 1974, deviation: 1.87102
+Method 3 mean: 1024, deviation: 0
+
+N = 4095
+Method 1 mean: 15992.6, deviation: 127.519
+Method 2 mean: 4004.9, deviation: 1.88606
+Method 3 mean: 2048, deviation: 0
+
