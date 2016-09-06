@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <random>
 
 using namespace std;
 
@@ -129,12 +130,12 @@ int main() {
 				v3[i - 1] = i;
 			}
 
+			random_device rd;
+			mt19937 gen(rd());
+			uniform_int_distribution<unsigned long long> dis(1, N);
 			while (true) {
-				int randomNbr = rand() % N + 1;
+				unsigned long long randomNbr = dis(gen);
 				++itr1;
-				if (itr1 % 1000000 == 0) {
-					cout << itr1 << endl;
-				}
 				if (graph[randomNbr].marked) {
 					continue;
 				} 
@@ -153,8 +154,10 @@ int main() {
 				int i = v2.back();
 				v2.pop_back();
 				++itr2;
-				if (mark(i, graph, true)) {
-					break;
+				if (!graph[i].marked) {
+					if (mark(i, graph, true)) {
+						break;
+					}
 				}
 			}
 
