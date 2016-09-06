@@ -9,7 +9,7 @@
 using namespace std;
 
 int N;
-#define MAX_LAYERS 12
+#define MAX_LAYERS 20
 #define N_ROUNDS 10.0
 
 class Node {
@@ -33,8 +33,9 @@ public:
 	}
 };
 
-bool mark(int i, vector<Node>& graph) {
+bool mark(int i, vector<Node>& graph, bool checkFinish) {
 	graph[i].marked = true;
+
 	int finalLayer = graph.back().layer;
 
 	//Rule 1
@@ -42,13 +43,13 @@ bool mark(int i, vector<Node>& graph) {
 		if (graph[i].id % 2 == 0) { //left
 			if (graph[i + 1].marked) {
 				if (!graph[graph[i].parent].marked)
-					mark(graph[i].parent, graph);
+					mark(graph[i].parent, graph, false);
 			}
 		}
 		else if (graph[i].id % 2 == 1) { //right
 			if (graph[i - 1].marked) {
 				if (!graph[graph[i].parent].marked)
-					mark(graph[i].parent, graph);
+					mark(graph[i].parent, graph, false);
 			}
 		}
 	}
@@ -58,44 +59,38 @@ bool mark(int i, vector<Node>& graph) {
 		if (graph[graph[i].parent].marked) {
 			if (graph[i].id % 2 == 0) { //left
 				if (!graph[i + 1].marked)
-					mark(i + 1, graph);
+					mark(i + 1, graph, false);
 			}
 			else if (graph[i].id % 2 == 1) { //right
 				if (!graph[i - 1].marked)
-					mark(i - 1, graph);
+					mark(i - 1, graph, false);
 			}
 		}
 	}
 	if (graph[i].layer != finalLayer) {
 		if (graph[graph[i].left].marked) {
 			if (!graph[graph[i].right].marked)
-				mark(graph[i].right, graph);
+				mark(graph[i].right, graph, false);
 		}
 		else if (graph[graph[i].right].marked) {
 			if (!graph[graph[i].left].marked)
-				mark(graph[i].left, graph);
+				mark(graph[i].left, graph, false);
 		}
 	}
 
-	//check for termination
-	size_t j = N;
-	while (graph[j].layer == finalLayer) {
-		if (!graph[j--].marked) {
-			return false;
+	if (checkFinish) {
+		//check for termination
+		size_t j = N;
+		while (graph[j].layer == finalLayer) {
+			if (!graph[j--].marked) {
+				return false;
+			}
 		}
+		return true;
 	}
-	return true;
-}
-
-
-vector<int> getUnmarked(const vector<Node>& graph) {
-	vector<int> ret;
-	for (int i = 1; i < N; ++i) {
-		if (!graph[i].marked) {
-			ret.push_back(i);
-		}
+	else {
+		return false;
 	}
-	return ret;
 }
 
 void resetGraph(vector<Node>& graph) {
@@ -107,7 +102,8 @@ void resetGraph(vector<Node>& graph) {
 void assertCompletion(int t, const vector<Node>& graph) {
 	for (int i = 1; i < graph.size(); ++i) {
 		if (!graph[i].marked) {
-			cout << "Test " << t << " not terminated correctly!";
+			cout << "Test " << t << " not terminated correctly!" << endl;
+			return;
 		}
 	}
 }
@@ -120,21 +116,31 @@ int main() {
 	for (int r = 0; r < N_ROUNDS; ++r) {
 		for (int l = 2; l <= MAX_LAYERS; ++l) {
 			N = pow(2, l) - 1;
-			int itr1 = 1;
+			int itr1 = 0;
 			int itr2 = 1;
-			int itr3 = 1;
+			int itr3 = 0;
 			vector<Node> graph(N + 1);
-			vector<int> v(N);
+			vector<int> v2(N);
+			vector<int> v3(N);
 			for (int i = 1; i <= N; ++i) {
 				Node n(i);
 				graph[i] = n;
-				v[i - 1] = i;
+				v2[i - 1] = i;
+				v3[i - 1] = i;
 			}
 
-			int randomNbr = rand() % N + 1;
-			while (!mark(randomNbr, graph)) {
-				randomNbr = rand() % N + 1;
+			while (true) {
+				int randomNbr = rand() % N + 1;
 				++itr1;
+				if (itr1 % 1000000 == 0) {
+					cout << itr1 << endl;
+				}
+				if (graph[randomNbr].marked) {
+					continue;
+				} 
+				if (mark(randomNbr, graph, true)) {
+					break;
+				}
 			}
 
 			cout << "Completed test 1 for N = " << N << endl;
@@ -142,22 +148,28 @@ int main() {
 			resetGraph(graph);
 
 			//Sends random node not sent before
-			random_shuffle(v.begin(), v.end());
-			while (!mark(v.back(), graph)) {
-				v.pop_back();
+			random_shuffle(v2.begin(), v2.end());
+			while (!v2.empty()) {
+				int i = v2.back();
+				v2.pop_back();
 				++itr2;
+				if (mark(i, graph, true)) {
+					break;
+				}
 			}
 
 			cout << "Completed test 2 for N = " << N << endl;
 			assertCompletion(2, graph);
 			resetGraph(graph);
 
-
-			int toMark = rand() % N + 1;
-			while (!mark(toMark, graph)) {
-				vector<int> unmarked = getUnmarked(graph);
-				toMark = unmarked[rand() % unmarked.size()];
-				++itr3;
+			random_shuffle(v3.begin(), v3.end());
+			for (int i : v3) {
+				if (!graph[i].marked) {
+					++itr3;
+					if (mark(i, graph, true)) {
+						break;
+					}
+				}
 			}
 
 			cout << "Completed test 3 for N = " << N << endl;
