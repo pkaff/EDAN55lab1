@@ -118,7 +118,7 @@ int main() {
 		for (int l = 2; l <= MAX_LAYERS; ++l) {
 			N = pow(2, l) - 1;
 			int itr1 = 0;
-			int itr2 = 1;
+			int itr2 = 0;
 			int itr3 = 0;
 			vector<Node> graph(N + 1);
 			vector<int> v2(N);
